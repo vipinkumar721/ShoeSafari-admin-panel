@@ -3,53 +3,40 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { db } from "../Config/firebase";
 import { Form, Input, Button } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const AddNewProduct = () => {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
-  const [discription, setDiscription] = useState("");
-  const [discount, setDiscount] = useState("");
-
-     const onFinish = (values) => {
-      console.log("Form Data:", values);
-
-    };
+  const navigate = useNavigate();
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  const handleSubmitProduct = async (e) => {
-    debugger;
-    e.preventDefault();
-    const newDocRef = doc(collection(db, "products"));
-    const uniqueId = newDocRef.id;
+const handleSubmitProduct = async (values) => {
+  console.log("VALUES:", values);
 
-    try {
-      await setDoc(newDocRef, {
-        name: "Example Data",
-        id: uniqueId,
-      });
+  const newDocRef = doc(collection(db, "products"));
 
-      alert("Product Added");
-      setName("");
-      setPrice("");
-      setImage("");
-      setDiscription("");
-      setDiscount("");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  try {
+    await setDoc(newDocRef, {
+      id: newDocRef.id,
+      ...values
+    });
+
+    alert("Product Added");
+    setIsModalOpen(false);
+    navigate("/");
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -61,11 +48,12 @@ const AddNewProduct = () => {
             Add Products
           </Button>
           <Modal
-            closable={{ "aria-label": "Custom Close Button" }}
+            closable={true}
             open={isModalOpen}
+            onCancel={handleCancel}
             footer={null}
           >
-            <div class="h-full flex items-center justify-center bg-gray-100 p-4">
+            <div className="h-full flex items-center justify-center bg-gray-100 p-4">
               <Form
                 name="productForm"
                 layout="vertical"
@@ -114,7 +102,7 @@ const AddNewProduct = () => {
                 </Form.Item>
 
                 <Form.Item>
-                  <Button onClick={handleSubmitProduct} type="primary" typeof="submit" className="w-full">
+                  <Button htmlType="submit" type="primary" className="w-full">
                     Add Product
                   </Button>
                 </Form.Item>

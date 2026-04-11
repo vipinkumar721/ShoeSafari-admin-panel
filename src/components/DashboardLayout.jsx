@@ -3,6 +3,7 @@ import SideBar from "./SideBar";
 import Header from "./Header";
 import AddProducts from "./AddProducts";
 import AddNewProduct from "./AddNewProduct";
+import ProductList from "./ProductList";
 
 const DashboardLayout = () => {
   return (
@@ -11,6 +12,7 @@ const DashboardLayout = () => {
       <div className="w-full flex flex-col">
         <Header />
         <AddNewProduct/>
+        <ProductList/>
         <Outlet />
       </div>
     </div>
